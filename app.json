@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "Gridpay Terminal",
-    "slug": "Gridpay Terminal",
+    "slug": "gp-terminal",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/thisIcon.png",
-    "primaryColor":"#efefefef",
+    "primaryColor": "#efefefef",
     "splash": {
       "image": "./assets/openScreen.png",
       "resizeMode": "cover",
@@ -25,7 +25,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "net.gridpay"
@@ -39,6 +41,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8374cd1a-2d5d-4075-ac29-6f3383388a95"
+      }
+    },
+    "owner": "ausipome"
   }
 }
