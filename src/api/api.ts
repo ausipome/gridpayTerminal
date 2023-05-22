@@ -10,6 +10,7 @@ export class Api {
     };
 
     this.api_url = process.env.API_URL;
+    this.CONECTION_SECRET = process.env.CONECTION_SECRET;
   }
   
   async capturePaymentIntent(
@@ -34,11 +35,12 @@ export class Api {
   async createConnectionToken(): Promise<
     Stripe.Terminal.ConnectionToken | { error: Stripe.StripeAPIError }
   > {
-    const formData = new URLSearchParams();
+
+    const formData = new FormData();
+    formData.append('secret', this.CONECTION_SECRET);
     return fetch(`${this.api_url}/mobile-connection_token`, {
-      headers: this.headers,
       method: 'POST',
-      body: formData.toString(),
+      body: formData,
     }).then((resp) => resp.json());
   }
 }

@@ -99,7 +99,8 @@ export default function App() {
       const { error, reader } = await initStripe();
 
       if (error) {
-        Alert.alert('StripeTerminal init failed', error.message);
+        Alert.alert('You must have an internet connection to use this app. Please check your connection and try again.');
+        console.log('StripeTerminal init failed', error.message);
         return;
       }
 
