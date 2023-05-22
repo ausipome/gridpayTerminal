@@ -1,6 +1,6 @@
 {
   "name": "gridpay-terminal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "android": "expo run:android",
     "build:android:ci": "expo run:android --no-bundler",
