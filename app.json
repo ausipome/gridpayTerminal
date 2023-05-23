@@ -2,7 +2,7 @@
   "expo": {
     "name": "Gridpay Terminal",
     "slug": "gp-terminal",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/thisIcon.png",
     "primaryColor": "#efefefef",
