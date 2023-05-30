@@ -88,7 +88,7 @@ export default function CollectCardPaymentScreen() {
     let paymentIntent: PaymentIntent.Type | undefined;
     let paymentIntentError: StripeError<CommonError> | undefined;
       const response = await createPaymentIntent({
-        amount: Number((parseFloat(inputValues.amount))*100),
+        amount: Number(Math.ceil((parseFloat(inputValues.amount))*100)),
         currency: inputValues.currency,
         paymentMethodTypes: paymentMethods,
         setupFutureUsage: 'off_session',
