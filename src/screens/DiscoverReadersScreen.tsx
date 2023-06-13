@@ -62,9 +62,6 @@ export default function DiscoverReadersScreen() {
         },
       });
     },
-    onDidReportAvailableUpdate: (update) => {
-      Alert.alert('New update is available', update.deviceSoftwareVersion);
-    },
   });
 
   const isBTReader = (reader: Reader.Type) =>
