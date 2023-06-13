@@ -28,12 +28,14 @@ export default function CollectCardPaymentScreen() {
 
   const [inputValues, setInputValues] = useState<{
     amount: string;
+    amountSend: number;
     currency: string;
     email?: string;
     connectedAccountId: string;
     applicationFeeAmount: string;
   }>({
     amount: '',
+    amountSend: 0,
     email: '',
     currency: 'gbp',
     connectedAccountId: connectedId,
@@ -88,13 +90,13 @@ export default function CollectCardPaymentScreen() {
     let paymentIntent: PaymentIntent.Type | undefined;
     let paymentIntentError: StripeError<CommonError> | undefined;
       const response = await createPaymentIntent({
-        amount: Number(Math.ceil((parseFloat(inputValues.amount))*100)),
+        amount: inputValues.amountSend,
         currency: inputValues.currency,
         paymentMethodTypes: paymentMethods,
         setupFutureUsage: 'off_session',
         onBehalfOf: inputValues.connectedAccountId,
         transferDataDestination: inputValues.connectedAccountId,
-        applicationFeeAmount: Number(Math.ceil(((parseFloat(inputValues.amount)*100)*0.019)+20))
+        applicationFeeAmount: (inputValues.amountSend*0.019)+20
       });
       paymentIntent = response.paymentIntent;
       paymentIntentError = response.error;
@@ -389,9 +391,11 @@ export default function CollectCardPaymentScreen() {
           keyboardType="numeric"
           style={styles.input}
           value={inputValues.amount}
-          onChangeText={(value) =>
-            setInputValues((state) => ({ ...state, amount: value }))
-          }
+          onChangeText={(value) =>{
+            const sendValue= value.replace(".", "");
+            const integerValue= parseInt(sendValue);
+            setInputValues((state) => ({ ...state, amount: value, amountSend: integerValue }))
+          }}
           placeholder="Amount (£)"
         />
         </List>
