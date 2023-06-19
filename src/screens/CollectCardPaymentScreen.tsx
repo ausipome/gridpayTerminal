@@ -392,7 +392,9 @@ export default function CollectCardPaymentScreen() {
           style={styles.input}
           value={inputValues.amount}
           onChangeText={(value) =>{
-            const sendValue= value.replace(".", "");
+            let sendValue;
+            if(value.includes(".")){sendValue= value.replace(".", "")}
+            else{sendValue= value+"00"}
             const integerValue= parseInt(sendValue);
             setInputValues((state) => ({ ...state, amount: value, amountSend: integerValue }))
           }}
