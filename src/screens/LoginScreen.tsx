@@ -1,6 +1,6 @@
 import { useNavigation} from '@react-navigation/core';
-import React, { useState, useContext } from 'react';
-import { ActivityIndicator, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState, useContext, useEffect} from 'react';
+import { ActivityIndicator, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, PermissionsAndroid, BackHandler} from 'react-native';
 import { AppContext } from '../AppContext';
 
 export default function LoginPage() {
@@ -11,7 +11,79 @@ export default function LoginPage() {
   const [isLoading, setisLoading] = useState(false); 
   const { setconnectedId } = useContext(AppContext);
 
-  
+  const [showPopup, setShowPopup] = useState(false);
+  const [permissionStatus, setPermissionStatus] = useState(null);
+
+  useEffect(() => {
+    // Check for existing location permission when the component mounts
+    checkLocationPermission();
+  }, []);
+
+  const checkLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted) {
+        // Permission already granted, close the modal
+        setPermissionStatus('granted');
+        setShowPopup(false);
+      }
+      else{
+        // Permission denied, show the modal
+        setPermissionStatus('Waiting');
+        setShowPopup(true);
+      }
+    } catch (error) {
+      console.log('Location permission error:', error);
+    }
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        // Permission granted, close the modal
+        setPermissionStatus('granted');
+        setShowPopup(false);
+      } else {
+        // Permission denied, close the app
+        setPermissionStatus('denied');
+        Alert.alert('Permission Denied', 'The app will be closed.', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Exit the app (may need to adjust this based on your navigation setup)
+              BackHandler.exitApp();
+            },
+          },
+        ]);
+      }
+    } catch (error) {
+      console.log('Location permission error:', error);
+    }
+  };
+
+  const handleAccept = async () => {
+    // Request location permission
+    requestLocationPermission();
+  };
+
+  const handleDeny = () => {
+    // Close the app if location permission was denied
+      Alert.alert('Permission Denied', 'The app will be closed.', [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Exit the app (may need to adjust this based on your navigation setup)
+            BackHandler.exitApp();
+          },
+        },
+      ]);
+   
+  };
 
   const handleLogin = () => {
     setisLoading(true);
@@ -46,12 +118,24 @@ export default function LoginPage() {
 
   return (
     <View style={styles.container}>
+      <Modal visible={showPopup} animationType="fade">
+      <View style={styles.modalContainer}>
+        <Text style={styles.text}>
+          Gridpay Terminal collects location data to enable the verification of payments being
+          processed while using the Gridpay Terminal app.
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleAccept} style={styles.button} ><Text style={styles.buttonText}>Accept</Text></TouchableOpacity>
+          <TouchableOpacity onPress={handleDeny} style={styles.button} ><Text style={styles.buttonText}>Deny</Text></TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
       <Modal
         visible={isLoading}
         transparent={true}
         animationType="fade"
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor: 'rgba(0, 0, 0, 0.5)', opacity: 0.9 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor: 'rgba(0, 0, 0, 0.5)', opacity: 0.9 }}>
       <ActivityIndicator size="large" color='black' />
       </View>
       </Modal>
@@ -78,6 +162,35 @@ export default function LoginPage() {
 };
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 8,
+    height: '30%',
+    width: '90%',
+    marginHorizontal: 20,
+    marginTop: '1%',
+    borderColor: 'orange',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  text: {
+    marginBottom: 10,
+    fontSize: 20,
+    textAlign: 'justify',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -103,6 +216,8 @@ const styles = StyleSheet.create({
     borderColor: 'orange',
     borderWidth: 1,
     padding: 10,
+    marginHorizontal: 5,
+    fontSize: 20,
   },
   buttonText: {
     color: '#000',
