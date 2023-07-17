@@ -6,7 +6,7 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
-import { Platform, StatusBar, StyleSheet, Image, View} from 'react-native';
+import { Platform, StatusBar, StyleSheet, Image, View, Alert, LogBox, PermissionsAndroid, BackHandler, Modal, Text, TouchableOpacity} from 'react-native';
 import { colors } from './colors';
 import { LogContext, Log, Event } from './components/LogContext';
 import DiscoverReadersScreen from './screens/DiscoverReadersScreen';
@@ -22,7 +22,6 @@ import {
   useStripeTerminal,
   requestNeededAndroidPermissions,
 } from '@stripe/stripe-terminal-react-native';
-import { Alert, LogBox } from 'react-native';
 
 export type RouteParamList = {
   UpdateReader: {
@@ -89,10 +88,36 @@ const screenOptions = {
 };
 
 export default function App() {
+
   const [logs, setlogs] = useState<Log[]>([]);
   const [hasPerms, setHasPerms] = useState<boolean>(false);
   const clearLogs = useCallback(() => setlogs([]), []);
   const { initialize: initStripe } = useStripeTerminal();
+  const [showPopup, setShowPopup] = useState(false);
+  const [permissionStatus, setPermissionStatus] = useState('Waiting');
+
+  useEffect(() => {
+    // Check for existing location permission when the component mounts
+    checkLocationPermission();
+  }, []);
+
+  const checkLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted) {
+        // Permission already granted
+        setPermissionStatus('granted');
+      }
+      else{
+        // Permission denied, show the modal
+        setShowPopup(true);
+      }
+    } catch (error) {
+      console.log('Location permission error:', error);
+    }
+  };
 
   useEffect(() => {
     const initAndClear = async () => {
@@ -123,13 +148,12 @@ export default function App() {
     setHasPerms(true);
   }, []);
 
-  useEffect(() => {
     async function handlePermissions() {
       try {
         const { error } = await requestNeededAndroidPermissions({
           accessFineLocation: {
             title: 'Location Permission',
-            message: 'Stripe Terminal needs access to your location',
+            message: 'Gridpay Terminal Needs Access to your location',
             buttonPositive: 'Accept',
           },
         });
@@ -144,12 +168,26 @@ export default function App() {
         console.error(e);
       }
     }
-    if (Platform.OS === 'android') {
+
+    const handleAccept = async () => {
+      // Request location permission
+      setShowPopup(false);
       handlePermissions();
-    } else {
-      handlePermissionsSuccess();
-    }
-  }, [handlePermissionsSuccess]);
+    };
+  
+    const handleDeny = () => {
+      // Close the app if location permission was denied
+        Alert.alert('Permission Denied', 'The app will not work without the requested permissions!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Exit the app (may need to adjust this based on your navigation setup)
+              BackHandler.exitApp();
+            },
+          },
+        ]);
+     
+    };
 
   const addLogs = useCallback((newLog: Log) => {
     const updateLog = (log: Log) =>
@@ -176,7 +214,23 @@ export default function App() {
           barStyle="light-content"
           translucent
         />
+        <View>
+        <Modal visible={showPopup} animationType="fade">
+      <View style={styles.modalContainer}>
+        <Text style={styles.text}>
+        To successfully process payments Gridpay Terminal needs access to your location. {'\n'}
+        This feature is required by our payment processor Stripe and is to ensure that all required checks are performed on each payment before they are approved. {'\n'}
+        Bluetooth permissions are also required to connect the reader to your phone. {'\n'}
+        You will not be able to use this app if you do not approve these permissions. 
 
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleAccept} style={styles.button} ><Text style={styles.buttonText}>Accept</Text></TouchableOpacity>
+          <TouchableOpacity onPress={handleDeny} style={styles.button} ><Text style={styles.buttonText}>Deny</Text></TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+        </View>
         <NavigationContainer>
           <Stack.Navigator screenOptions={screenOptions} mode="modal">
           <Stack.Screen name="Login" component={LoginScreen} />
@@ -233,6 +287,48 @@ let styles;
 const setImageStyles = (() => {
  const statusBarHeight = StatusBar.currentHeight || 0;
  styles = StyleSheet.create({
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 8,
+    width: '90%',
+    marginHorizontal: 20,
+    marginTop: '30%',
+    borderColor: 'orange',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  text: {
+    marginBottom: 10,
+    fontSize: 20,
+  },
+  buttonContainer: {
+    marginTop: '5%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  button: {
+    backgroundColor: '#ffffff',
+    borderRadius: 4,
+    borderColor: 'orange',
+    borderWidth: 1,
+    padding: 10,
+    marginHorizontal: 5,
+    fontSize: 20,
+  },
+  buttonText: {
+    color: '#000',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
   image: {
    width:202,
    marginTop: statusBarHeight,
