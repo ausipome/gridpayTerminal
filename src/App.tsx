@@ -218,7 +218,7 @@ export default function App() {
         <Modal visible={showPopup} animationType="fade">
       <View style={styles.modalContainer}>
         <Text style={styles.text}>
-        Gridpay Terminal collects location data to enable payment processing even when the app is closed or not in use. {'\n'}
+        Gridpay Terminal collects location data to enable payments to be successfully processed. {'\n'}
         This feature is required by our payment processor Stripe and is to ensure that all required security checks are performed on each payment before they are approved. {'\n'}
         Bluetooth permissions are also required to connect the reader to your phone. {'\n'}
         You will not be able to use this app if you do not approve these permissions. 
