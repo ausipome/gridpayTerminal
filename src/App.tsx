@@ -6,7 +6,7 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
-import { Platform, StatusBar, StyleSheet, Image, View, Alert, LogBox, PermissionsAndroid, BackHandler, Modal, Text, TouchableOpacity} from 'react-native';
+import { Platform, StatusBar, StyleSheet, Image, View, Alert, LogBox, PermissionsAndroid, BackHandler, Modal, Text, TouchableOpacity, Linking } from 'react-native';
 import { colors } from './colors';
 import { LogContext, Log, Event } from './components/LogContext';
 import DiscoverReadersScreen from './screens/DiscoverReadersScreen';
@@ -206,6 +206,21 @@ export default function App() {
     [logs, addLogs, clearLogs]
   );
 
+  const handleAnchorPress = async () => {
+    const url = 'https://gridpay.net/terms_of_service.html'; 
+    
+    // Check if the device can handle the URL (i.e., if a web browser is available)
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // If the URL is supported, open it in the default web browser
+      await Linking.openURL(url);
+    } else {
+      // If the URL is not supported, handle the error (e.g., show an error message)
+      alert('Cannot open this URL.');
+    }
+  };
+
   return (
     <LogContext.Provider value={value}>
       <>
@@ -218,11 +233,13 @@ export default function App() {
         <Modal visible={showPopup} animationType="fade">
       <View style={styles.modalContainer}>
         <Text style={styles.text}>
-        Gridpay Terminal collects location data to enable payments to be successfully processed. {'\n'}
-        This feature is required by our payment processor Stripe and is to ensure that all required security checks are performed on each payment before they are approved. {'\n'}
-        Bluetooth permissions are also required to connect the reader to your phone. {'\n'}
-        You will not be able to use this app if you do not approve these permissions. 
-
+        Gridpay Terminal collects location data to enable payments to be successfully processed. {'\n\n'}
+        This feature is required by our payment processor Stripe and is to ensure that all required security checks are performed on each payment before they are approved. {'\n\n'}
+        Bluetooth permissions are also required to connect the reader to your phone. {'\n\n'}
+        Our full terms of service and privacy policy can be found at the link below. {'\n\n'}
+        <TouchableOpacity onPress={handleAnchorPress}>
+          <Text style={{ textDecorationLine: 'underline', color: 'blue' }}>Terms of Service and Privacy Policy</Text>
+        </TouchableOpacity>
         </Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleAccept} style={styles.button} ><Text style={styles.buttonText}>Accept</Text></TouchableOpacity>
@@ -293,7 +310,7 @@ const setImageStyles = (() => {
     borderRadius: 8,
     width: '90%',
     marginHorizontal: 20,
-    marginTop: '30%',
+    marginTop: '10%',
     borderColor: 'orange',
     borderWidth: 1,
     borderStyle: 'solid',
