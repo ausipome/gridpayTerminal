@@ -233,7 +233,7 @@ export default function App() {
         <Modal visible={showPopup} animationType="fade">
       <View style={styles.modalContainer}>
         <Text style={styles.text}>
-        Gridpay Terminal collects location data to enable payments to be successfully processed. {'\n\n'}
+        Gridpay Terminal collects location data to enable security checks to be performed during the processing of  payments. {'\n\n'}
         This feature is required by our payment processor Stripe and is to ensure that all required security checks are performed on each payment before they are approved. {'\n\n'}
         Bluetooth permissions are also required to connect the reader to your phone. {'\n\n'}
         Our full terms of service and privacy policy can be found at the link below. {'\n\n'}
