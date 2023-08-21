@@ -1,4 +1,5 @@
 import type { Stripe } from 'stripe';
+import Config from 'react-native-config';
 
 export class Api {
   headers: Record<string, string>;
@@ -9,8 +10,8 @@ export class Api {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    this.api_url = process.env.API_URL;
-    this.CONECTION_SECRET = process.env.CONECTION_SECRET;
+    this.api_url = Config.API_URL;
+    this.CONECTION_SECRET = Config.CONECTION_SECRET;
   }
   
   async capturePaymentIntent(

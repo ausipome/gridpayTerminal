@@ -88,44 +88,17 @@ const screenOptions = {
 };
 
 export default function App() {
-
   const [logs, setlogs] = useState<Log[]>([]);
   const [hasPerms, setHasPerms] = useState<boolean>(false);
   const clearLogs = useCallback(() => setlogs([]), []);
   const { initialize: initStripe } = useStripeTerminal();
-  const [showPopup, setShowPopup] = useState(false);
-  const [permissionStatus, setPermissionStatus] = useState('Waiting');
-
-  useEffect(() => {
-    // Check for existing location permission when the component mounts
-    checkLocationPermission();
-  }, []);
-
-  const checkLocationPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-      );
-      if (granted) {
-        // Permission already granted
-        setPermissionStatus('granted');
-      }
-      else{
-        // Permission denied, show the modal
-        setShowPopup(true);
-      }
-    } catch (error) {
-      console.log('Location permission error:', error);
-    }
-  };
 
   useEffect(() => {
     const initAndClear = async () => {
       const { error, reader } = await initStripe();
 
       if (error) {
-        Alert.alert('You must have an internet connection to use this app. Please check your connection and try again.');
-        console.log('StripeTerminal init failed', error.message);
+        Alert.alert('StripeTerminal init failed', error.message);
         return;
       }
 
@@ -148,12 +121,14 @@ export default function App() {
     setHasPerms(true);
   }, []);
 
+
+  useEffect(() => {
     async function handlePermissions() {
       try {
         const { error } = await requestNeededAndroidPermissions({
           accessFineLocation: {
             title: 'Location Permission',
-            message: 'Gridpay Terminal Needs Access to your location',
+            message: 'Stripe Terminal needs access to your location',
             buttonPositive: 'Accept',
           },
         });
@@ -168,26 +143,12 @@ export default function App() {
         console.error(e);
       }
     }
-
-    const handleAccept = async () => {
-      // Request location permission
-      setShowPopup(false);
+    if (Platform.OS === 'android') {
       handlePermissions();
-    };
-  
-    const handleDeny = () => {
-      // Close the app if location permission was denied
-        Alert.alert('Permission Denied', 'The app will not work without the requested permissions!', [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Exit the app (may need to adjust this based on your navigation setup)
-              BackHandler.exitApp();
-            },
-          },
-        ]);
-     
-    };
+    } else {
+      handlePermissionsSuccess();
+    }
+  }, [handlePermissionsSuccess]);
 
   const addLogs = useCallback((newLog: Log) => {
     const updateLog = (log: Log) =>
@@ -206,20 +167,6 @@ export default function App() {
     [logs, addLogs, clearLogs]
   );
 
-  const handleAnchorPress = async () => {
-    const url = 'https://gridpay.net/terms_of_service.html'; 
-    
-    // Check if the device can handle the URL (i.e., if a web browser is available)
-    const supported = await Linking.canOpenURL(url);
-
-    if (supported) {
-      // If the URL is supported, open it in the default web browser
-      await Linking.openURL(url);
-    } else {
-      // If the URL is not supported, handle the error (e.g., show an error message)
-      alert('Cannot open this URL.');
-    }
-  };
 
   return (
     <LogContext.Provider value={value}>
@@ -229,25 +176,6 @@ export default function App() {
           barStyle="light-content"
           translucent
         />
-        <View>
-        <Modal visible={showPopup} animationType="fade">
-      <View style={styles.modalContainer}>
-        <Text style={styles.text}>
-        Gridpay Terminal collects location data to enable security checks to be performed during the processing of  payments. {'\n\n'}
-        This feature is required by our payment processor Stripe and is to ensure that all required security checks are performed on each payment before they are approved. {'\n\n'}
-        Bluetooth permissions are also required to connect the reader to your phone. {'\n\n'}
-        Our full terms of service and privacy policy can be found at the link below. {'\n\n'}
-        <TouchableOpacity onPress={handleAnchorPress}>
-          <Text style={{ textDecorationLine: 'underline', color: 'blue' }}>Terms of Service and Privacy Policy</Text>
-        </TouchableOpacity>
-        </Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleAccept} style={styles.button} ><Text style={styles.buttonText}>Accept</Text></TouchableOpacity>
-          <TouchableOpacity onPress={handleDeny} style={styles.button} ><Text style={styles.buttonText}>Deny</Text></TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
-        </View>
         <NavigationContainer>
           <Stack.Navigator screenOptions={screenOptions} mode="modal">
           <Stack.Screen name="Login" component={LoginScreen} />
