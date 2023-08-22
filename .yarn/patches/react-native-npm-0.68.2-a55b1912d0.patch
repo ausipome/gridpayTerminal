@@ -1,0 +1,13 @@
+diff --git a/ReactCommon/yoga/yoga/Yoga.cpp b/ReactCommon/yoga/yoga/Yoga.cpp
+index 99862797b9bb594cd59a07cefb5b086ff2ed9f15..20389d4f2404f33da38023cc4a6e6d750f6fe03c 100644
+--- a/ReactCommon/yoga/yoga/Yoga.cpp
++++ b/ReactCommon/yoga/yoga/Yoga.cpp
+@@ -2229,7 +2229,7 @@ static float YGDistributeFreeSpaceSecondPass(
+         depth,
+         generationCount);
+     node->setLayoutHadOverflow(
+-        node->getLayout().hadOverflow() |
++        node->getLayout().hadOverflow() ||
+         currentRelativeChild->getLayout().hadOverflow());
+   }
+   return deltaFreeSpace;
