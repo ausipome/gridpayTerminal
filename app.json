@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Gridpay Terminal",
-    "slug": "gp-terminal",
+    "slug": "gridpayterminal",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/thisIcon.png",
@@ -44,9 +44,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "8374cd1a-2d5d-4075-ac29-6f3383388a95"
+        "projectId": "4f296319-e1d8-4576-9fc0-40b543534ff9"
       }
     },
-    "owner": "ausipome"
+    "owner": "martynglaze.co.uk"
   }
 }
