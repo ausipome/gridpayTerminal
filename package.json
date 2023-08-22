@@ -51,7 +51,8 @@
     "redux-thunk": "^2.4.2"
   },
   "resolutions": {
-    "@types/react": "17.0.41"
+    "@types/react": "17.0.41",
+    "react-native@0.68.2": "patch:react-native@npm%3A0.68.2#./.yarn/patches/react-native-npm-0.68.2-a55b1912d0.patch"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
