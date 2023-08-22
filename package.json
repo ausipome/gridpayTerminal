@@ -9,7 +9,7 @@
     "start": "expo start --dev-client",
     "typescript": "tsc --noEmit",
     "web": "expo start --web",
-    "postinstall":"patch-package"
+    "postinstall":"patch"
   },
   "expo": {
     "autolinking": {
