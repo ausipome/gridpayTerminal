@@ -8,8 +8,7 @@
     "ios": "expo run:ios",
     "start": "expo start --dev-client",
     "typescript": "tsc --noEmit",
-    "web": "expo start --web",
-    "postinstall":"patches/react-native+0.68.2.patch"
+    "web": "expo start --web"
   },
   "expo": {
     "autolinking": {
