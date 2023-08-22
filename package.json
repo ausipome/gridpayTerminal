@@ -8,7 +8,8 @@
     "ios": "expo run:ios",
     "start": "expo start --dev-client",
     "typescript": "tsc --noEmit",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "postinstall":"patch-package"
   },
   "expo": {
     "autolinking": {
