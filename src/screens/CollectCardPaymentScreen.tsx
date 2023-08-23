@@ -96,7 +96,7 @@ export default function CollectCardPaymentScreen() {
         setupFutureUsage: 'off_session',
         onBehalfOf: inputValues.connectedAccountId,
         transferDataDestination: inputValues.connectedAccountId,
-        applicationFeeAmount: (inputValues.amountSend*0.019)+20
+        applicationFeeAmount: parseInt(inputValues.amountSend*0.019)+20
       });
       paymentIntent = response.paymentIntent;
       paymentIntentError = response.error;
