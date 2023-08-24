@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.light_gray,
     height: '100%',
-    marginTop:25,
+    marginTop:70,
   },
   pickerContainer: {
     position: 'absolute',

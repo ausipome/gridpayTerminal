@@ -490,6 +490,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light_gray,
     paddingVertical: 22,
     flexGrow: 1,
+    marginTop:70,
   },
   json: {
     paddingHorizontal: 16,

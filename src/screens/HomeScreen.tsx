@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.light_gray,
     textAlign:'center',
-    marginTop:25,
+    marginTop:70,
   },
   groupTitle: {
     color: colors.dark_gray,
