@@ -5,6 +5,7 @@ import { setData } from '../../dataSlice';
 import { Text, View, ActivityIndicator } from 'react-native';
 import moment from "moment";
 import fetchPayments from '../api/fetchPayments';
+import { color } from 'react-native-reanimated';
 
 
 export default function Previous({hasChanged}) {
@@ -20,7 +21,7 @@ export default function Previous({hasChanged}) {
     return (
       <View>
          <Text style={{ fontSize: 20, marginTop: 20, textAlign: 'center', color: '#cf7500', borderBottomWidth: 1,borderBottomColor: '#A3B3C1',borderStyle: 'solid', paddingBottom: 5}}>Previous Payments</Text>
-         {data === null ? (<><Text style={{ padding: 18, fontSize: 18, color: 'green', textAlign: 'center'}}>Searching for previous payments...</Text><Text style={{textAlign:'center'}}><ActivityIndicator size="small" color='black' /></Text></>) 
+         {data === null ? (<><Text style={{ padding: 18, fontSize: 18, color: 'green', textAlign: 'center'}}>Searching for previous payments...</Text><View style={{alignItems:'center'}}><ActivityIndicator size="small" color='red' /></View></>) 
          : data.length === 0 ? (<Text style={{ padding: 18, fontSize: 16, color: 'green', textAlign: 'center'}}>No previous payments</Text>) : ( data.map((item) => (
           <View style={{ padding: 18, fontSize: 16, borderBottomWidth: 1,borderBottomColor: '#A3B3C1',borderStyle: 'solid',backgroundColor:'white'}} key={item?.id}>
             <View style={{width: '80%', marginLeft: '10%'}}>

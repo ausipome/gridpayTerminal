@@ -4,6 +4,7 @@ import {
   Text,
   ScrollView,
   Alert,
+  View,
   ActivityIndicator,
   Platform,
 } from 'react-native';
@@ -183,7 +184,7 @@ export default function DiscoverReadersScreen() {
           />
         ))}
       </List>
-      <Text style={[styles.centerText]}><ActivityIndicator size="large" color='green' /></Text>
+      <View style={{alignItems:'center'}}><ActivityIndicator size="small" color='green' /></View>
       <Text style={[styles.colorRed, styles.centerText]}>Please click reader to connect!</Text>
     </ScrollView>
   );
@@ -198,6 +199,7 @@ const styles = StyleSheet.create({
   centerText:{
     textAlign:'center',
     marginTop: 20,
+    width: '100%',
   },
   colorRed:{
     color: 'red',
@@ -207,6 +209,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.light_gray,
     height: '100%',
+    marginTop:25,
   },
   pickerContainer: {
     position: 'absolute',

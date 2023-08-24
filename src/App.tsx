@@ -71,7 +71,7 @@ const Stack = createStackNavigator();
 const screenOptions = {
   headerTitle: null,
   headerBackground: () => (
-    <View style={{backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center', height: 110, borderBottomColor: '#efefefef', borderBottomWidth:1 }}>
+    <View style={{backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center', height: 140, borderBottomColor: '#efefefef', borderBottomWidth:1, paddingTop:40}}>
     <Image
       source={require('../assets/gridpay_logo.png')}
       style={styles.image}
